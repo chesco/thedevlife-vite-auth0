@@ -1,16 +1,19 @@
-/* eslint-disable react/prop-types */
-// ProtectedRoute.js
 import { useAuth0 } from '@auth0/auth0-react';
+import { Navigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const { isAuthenticated, isLoading } = useAuth0();
 
-  if (!isAuthenticated) {
-    loginWithRedirect();
-    return null;
+  if (isLoading) {
+    return <div>Loading...</div>; // or a loading spinner
   }
 
-  return children;
+  return isAuthenticated ? children : <Navigate to="/" />;
+};
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired
 };
 
 export default ProtectedRoute;
